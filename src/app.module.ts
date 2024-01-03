@@ -5,6 +5,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { resolve } from 'path';
 import { EmployeesModule } from './modules/employees/employees.module';
 import { DatabaseModule } from './modules/_global/database.module';
+import { TasksModule } from './modules/tasks/tasks.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { DatabaseModule } from './modules/_global/database.module';
     }),
     DatabaseModule,
     EmployeesModule,
+    TasksModule,
   ],
   controllers: [AppController],
   providers: [AppService],
