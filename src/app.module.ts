@@ -4,8 +4,11 @@ import { AppService } from './app.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { resolve } from 'path';
 import { EmployeesModule } from './modules/employees/employees.module';
-import { DatabaseModule } from './modules/_global/database.module';
 import { TasksModule } from './modules/tasks/tasks.module';
+import { UsersModule } from './modules/users/users.module';
+import { RedisModule, RedisModuleOptions } from '@liaoliaots/nestjs-redis';
+import { DatabaseModule } from './modules/_global/database.module';
+import { CacheService } from '@services/cache.service';
 
 @Module({
   imports: [
@@ -22,12 +25,26 @@ import { TasksModule } from './modules/tasks/tasks.module';
         };
       },
     }),
+    RedisModule.forRootAsync({
+      useFactory: async (): Promise<RedisModuleOptions> => {
+        return {
+          closeClient: true,
+          config: {
+            host: 'localhost',
+            port: 6379,
+            // password: '123456',
+            db: 0,
+          },
+        };
+      },
+    }),
     DatabaseModule,
     EmployeesModule,
     TasksModule,
+    UsersModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, CacheService],
 })
 export class AppModule implements NestModule {
   configure() {}
